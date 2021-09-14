@@ -1,0 +1,85 @@
+---
+title: "Data Cleaning"
+author: "Matthew Edwards"
+date: "14/09/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(reticulate)
+use_python("/usr/local/bin/python3.9")
+```
+
+## Introduction
+
+**Clean data** is data that can be used for exploratory data analysis (EDA). **Data cleaning** is the process of transforming raw data into clean data. The process of data cleaning involves ? steps:
+
+1. Columns names
+2. Missing values
+3. Column types
+4. Dedupliction
+5. Quality checking
+
+## Raw Data
+
+```{python}
+import pandas as pd
+data = pd.read_csv("data.csv")
+data
+```
+
+## Column Names
+
+```{python}
+names = {
+  'A': 'gender',
+  'B': 'dob',
+  'C': 'score',
+  'D': 'grade',
+}
+data.rename(mapper=names, axis=1, inplace=True)
+data.columns
+```
+
+## Missing Values
+
+```{python}
+import numpy as np
+missing = {
+  'na': np.nan,
+  -1: np.nan,
+}
+data.replace(missing, inplace=True)
+data.info()
+```
+
+## Columns Types
+
+```{python}
+from pandas.api.types import CategoricalDtype
+gender_cat = CategoricalDtype(categories=["male", "female"], ordered=False)
+grade_cat = CategoricalDtype(categories=["A", "B", "C", "D"], ordered=True)
+types = {
+  'gender': gender_cat,
+  'dob': 'datetime64',
+  'score': 'float64',
+  'grade': grade_cat,
+}
+data = data.astype(types)
+data.dtypes
+```
+
+## Deduplication
+
+```{python echo=TRUE}
+data.drop_duplicates(inplace=True)
+data
+```
+
+## Quality Check
+
+```{python}
+data
+```
+
