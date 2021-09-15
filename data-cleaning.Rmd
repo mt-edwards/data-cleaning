@@ -8,12 +8,11 @@ output: ioslides_presentation
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(reticulate)
-use_python("/usr/local/bin/python3.9")
 ```
 
 ## Introduction
 
-**Clean data** is data that can be used for exploratory data analysis (EDA). **Data cleaning** is the process of transforming raw data into clean data. The process of data cleaning involves ? steps:
+**Clean data** are data that can be used for exploratory data analysis (EDA). **Data cleaning** is the process of transforming raw data into clean data. The process of data cleaning involves five steps:
 
 1. Columns names
 2. Missing values
@@ -80,6 +79,13 @@ data
 ## Quality Check
 
 ```{python}
-data
-```
+def check(row):
+  A_check = row['grade'] == "A" and 90 < row['score'] <= 100 
+  B_check = row['grade'] == "B" and 80 < row['score'] <= 90
+  C_check = row['grade'] == "C" and 70 < row['score'] <= 80
+  D_check = row['grade'] == "D" and  0 < row['score'] <= 70
+  return A_check or B_check or C_check or D_check or np.isnan(row['score'])
+  
 
+any(data.apply(check, axis=1))
+```
