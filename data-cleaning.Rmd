@@ -8,6 +8,8 @@ output: ioslides_presentation
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(reticulate)
+virtualenv_create("data-cleaning", python="/usr/bin/python3")
+use_virtualenv("data-cleaning")
 ```
 
 ## Introduction
