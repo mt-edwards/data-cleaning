@@ -92,7 +92,70 @@ slide:not(.current) .plotly.html-widget{
     div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
-            
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+        
   </style>
 
 
@@ -112,9 +175,175 @@ slide:not(.current) .plotly.html-widget{
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>Introduction</h2></hgroup><article  id="introduction">
+<slide class=""><hgroup><h2>Motivation</h2></hgroup><article  id="motivation">
 
-<p><strong>Data cleaning</strong> is the process of transforming raw data into data that can be used for exploratory data anlysis.</p></article></slide>
+<p>The most time consuming stages of a data science project are data cleaning and exporatory data analysis (EDA). It is often stated that approximately 80% of the time is consumed by these two stages. This percentage will increase as your skill level increases, since these stages are less effected by skill level. These two stages are particularly important for:</p>
+
+<ul>
+<li>Reliability</li>
+<li>Robustness</li>
+<li>Accuracy</li>
+</ul>
+
+<p>The main difference between good and bad data scientists (with equal skill levels) is the quality of the data cleaning and EDA stages.</p>
+
+</article></slide><slide class=""><hgroup><h2>Introduction</h2></hgroup><article  id="introduction">
+
+<p><strong>Clean data</strong> are data that can be used for exploratory data analysis (EDA). <strong>Data cleaning</strong> is the process of transforming raw data into clean data. The process of data cleaning involves five steps:</p>
+
+<ol>
+<li>Column names</li>
+<li>Missing values</li>
+<li>Column types</li>
+<li>Dedupliction</li>
+<li>Quality checking</li>
+</ol>
+
+</article></slide><slide class=""><hgroup><h2>Raw Data</h2></hgroup><article  id="raw-data">
+
+<pre class = 'prettyprint lang-python'>import pandas as pd
+data = pd.read_csv(&quot;data.csv&quot;)
+print(data)</pre>
+
+<pre >##         A           B   C  D
+## 0    male  18/06/1988  74  C
+## 1  female  29/08/1993  92  A
+## 2  female  29/08/1993  92  A
+## 3  female  18/03/1997  -1  B
+## 4      na  16/01/2001  63  A</pre>
+
+</article></slide><slide class=""><hgroup><h2>Column Names</h2></hgroup><article  id="column-names">
+
+<p>The first stage of data cleaning is renaming the column names. This will simplify column selection. Column names should not include spaces or special characters. The three most popular column name formats are:</p>
+
+<ul>
+<li><code>snake_case</code></li>
+<li><code>kebab-case</code></li>
+<li><code>PascalCase</code></li>
+</ul>
+
+<p><code>snake_case</code> is recommended since it is more human readable.</p>
+
+</article></slide><slide class=""><hgroup><h2>Column Names</h2></hgroup><article  id="column-names-1">
+
+<pre class = 'prettyprint lang-python'>names = {
+  &#39;A&#39;: &#39;gender&#39;,
+  &#39;B&#39;: &#39;dob&#39;,
+  &#39;C&#39;: &#39;score&#39;,
+  &#39;D&#39;: &#39;grade&#39;,
+}
+data.rename(mapper=names, axis=1, inplace=True)
+print(data.columns)</pre>
+
+<pre >## Index([&#39;gender&#39;, &#39;dob&#39;, &#39;score&#39;, &#39;grade&#39;], dtype=&#39;object&#39;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Missing Values</h2></hgroup><article  id="missing-values">
+
+<p>Missingness is often represented inconsistently. For example the integer <code>-1</code> and the string &ldquo;na&rdquo; are commonly used to represent missing numeric and categorical values, respectively.</p>
+
+<p>Missingness is also sometimes respresented with an empty string. This can introduce ambiguity when empty strings are used for other purposes. In <code>pandas</code> missing values should be represented with the <code>numpy</code> special value <code>nan</code> (there are some rare exceptions).</p>
+
+</article></slide><slide class=""><hgroup><h2>Missing Values</h2></hgroup><article  id="missing-values-1">
+
+<pre class = 'prettyprint lang-python'>import numpy as np
+missing = {&#39;na&#39;: np.nan, -1: np.nan}
+data.replace(missing, inplace=True)
+print(data.info())</pre>
+
+<pre >## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## RangeIndex: 5 entries, 0 to 4
+## Data columns (total 4 columns):
+##  #   Column  Non-Null Count  Dtype  
+## ---  ------  --------------  -----  
+##  0   gender  4 non-null      object 
+##  1   dob     5 non-null      object 
+##  2   score   4 non-null      float64
+##  3   grade   5 non-null      object 
+## dtypes: float64(1), object(3)
+## memory usage: 288.0+ bytes
+## None</pre>
+
+</article></slide><slide class=""><hgroup><h2>Column Types</h2></hgroup><article  id="column-types">
+
+<p>The most common <code>pandas</code> data types are:</p>
+
+<ul>
+<li><code>int64</code></li>
+<li><code>float64</code></li>
+<li><code>datatime64</code></li>
+<li><code>category</code></li>
+</ul>
+
+<p>The use of <code>boolean</code> and <code>string</code> data types should be avoided. <code>category</code> data types are preferred instead since they include information about categories and ordering.</p>
+
+</article></slide><slide class=""><hgroup><h2>Column Types</h2></hgroup><article  id="column-types-1">
+
+<pre class = 'prettyprint lang-python'>from pandas.api.types import CategoricalDtype
+gender_cat = CategoricalDtype([&quot;male&quot;, &quot;female&quot;], ordered=False)
+grade_cat = CategoricalDtype([&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;], ordered=True)
+types = {
+  &#39;gender&#39;: gender_cat,
+  &#39;dob&#39;: &#39;datetime64&#39;,
+  &#39;score&#39;: &#39;float64&#39;,
+  &#39;grade&#39;: grade_cat,
+}
+data = data.astype(types)
+print(data.dtypes)</pre>
+
+<pre >## gender          category
+## dob       datetime64[ns]
+## score            float64
+## grade           category
+## dtype: object</pre>
+
+</article></slide><slide class=""><hgroup><h2>Deduplication</h2></hgroup><article  id="deduplication">
+
+<p>Deduplication is the process of removing identical rows from a table. Two rows are identical if the corresponding values in each column are equal.</p>
+
+</article></slide><slide class=""><hgroup><h2>Deduplication</h2></hgroup><article  id="deduplication-1">
+
+<pre class = 'prettyprint lang-python'>data.drop_duplicates(inplace=True)
+print(data)</pre>
+
+<pre >##    gender        dob  score grade
+## 0    male 1988-06-18   74.0     C
+## 1  female 1993-08-29   92.0     A
+## 3  female 1997-03-18    NaN     B
+## 4     NaN 2001-01-16   63.0     A</pre>
+
+</article></slide><slide class=""><hgroup><h2>Quality Check</h2></hgroup><article  id="quality-check">
+
+<p>Quality checking is the process of testing if the columns and relationships between columns satisfy certain expectations. For example testing if all values in a column are non-negative or between two bounds.</p>
+
+<p>Quality checking improves the reliability of project outputs (e.g. predictive model) and robustness to upstream changes in the data pipeline.</p>
+
+</article></slide><slide class=""><hgroup><h2>Quality Check</h2></hgroup><article  id="quality-check-1">
+
+<pre class = 'prettyprint lang-python'>def check(row):
+  A = row[&#39;grade&#39;] == &quot;A&quot; and 90 &lt; row[&#39;score&#39;] &lt;= 100 
+  B = row[&#39;grade&#39;] == &quot;B&quot; and 80 &lt; row[&#39;score&#39;] &lt;= 90
+  C = row[&#39;grade&#39;] == &quot;C&quot; and 70 &lt; row[&#39;score&#39;] &lt;= 80
+  D = row[&#39;grade&#39;] == &quot;D&quot; and  0 &lt; row[&#39;score&#39;] &lt;= 70
+  return A or B or C or D or np.isnan(row[&#39;score&#39;])
+
+print(data.apply(check, axis=1))</pre>
+
+<pre >## 0     True
+## 1     True
+## 3     True
+## 4    False
+## dtype: bool</pre>
+
+</article></slide><slide class=""><hgroup><h2>Advice</h2></hgroup><article  id="advice">
+
+<p>You should think of data cleaning as transforming data <strong>without loss of information</strong>. Data contains important information that you should not lose at this stage. In fact, data cleaning should increase the information content of data (e.g. column names and types). With only some exceptions:</p>
+
+<ol>
+<li><strong>Data Cleaning</strong>: lossless data transformations</li>
+<li><strong>Modelling</strong>: lossy data transformations</li>
+</ol>
+
+<p>Lossy data transformations during the modelling stage (i.e. pre-processing) are evaluated with validation data on the task.</p></article></slide>
 
 
   <slide class="backdrop"></slide>

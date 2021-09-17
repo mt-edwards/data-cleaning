@@ -8,15 +8,23 @@ output: ioslides_presentation
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(reticulate)
-virtualenv_create("data-cleaning", python="/usr/bin/python3")
-use_virtualenv("data-cleaning")
 ```
+
+## Motivation
+
+The most time consuming stages of a data science project are data cleaning and exploratory data analysis (EDA). It is often stated that approximately 80% of the time is consumed by these two stages. This percentage will increase as your skill level increases, since these stages are less effected by skill level. These two stages are particularly important for:
+
+- Reliability
+- Robustness
+- Accuracy
+
+The main difference between good and bad data scientists (with equal skill levels) is the quality of the data cleaning and EDA stages.
 
 ## Introduction
 
 **Clean data** are data that can be used for exploratory data analysis (EDA). **Data cleaning** is the process of transforming raw data into clean data. The process of data cleaning involves five steps:
 
-1. Columns names
+1. Column names
 2. Missing values
 3. Column types
 4. Dedupliction
@@ -24,15 +32,25 @@ use_virtualenv("data-cleaning")
 
 ## Raw Data
 
-```{python}
+```{python echo=TRUE}
 import pandas as pd
 data = pd.read_csv("data.csv")
-data
+print(data)
 ```
 
 ## Column Names
 
-```{python}
+The first stage of data cleaning is renaming the column names. This will simplify column selection. Column names should not include spaces or special characters. The three most popular column name formats are:
+
+- `snake_case`
+- `kebab-case`
+- `PascalCase`
+
+`snake_case` is recommended since it is more human readable.
+
+## Column Names
+
+```{python echo=TRUE}
 names = {
   'A': 'gender',
   'B': 'dob',
@@ -40,27 +58,41 @@ names = {
   'D': 'grade',
 }
 data.rename(mapper=names, axis=1, inplace=True)
-data.columns
+print(data.columns)
 ```
 
 ## Missing Values
 
-```{python}
+Missingness is often represented inconsistently. For example the integer `-1` and the string "na" are commonly used to represent missing numeric and categorical values, respectively. 
+
+Missingness is also sometimes represented with an empty string. This can introduce ambiguity when empty strings are used for other purposes. In `pandas` missing values should be represented with the `numpy` special value `nan` (there are some rare exceptions).
+
+## Missing Values
+
+```{python echo=TRUE}
 import numpy as np
-missing = {
-  'na': np.nan,
-  -1: np.nan,
-}
+missing = {'na': np.nan, -1: np.nan}
 data.replace(missing, inplace=True)
-data.info()
+print(data.info())
 ```
 
-## Columns Types
+## Column Types
 
-```{python}
+The most common `pandas` data types are: 
+
+- `int64`
+- `float64`
+- `datatime64`
+- `category`
+
+The use of `boolean` and `string` data types should be avoided. `category` data types are preferred instead since they include information about categories and ordering. 
+
+## Column Types
+
+```{python echo=TRUE}
 from pandas.api.types import CategoricalDtype
-gender_cat = CategoricalDtype(categories=["male", "female"], ordered=False)
-grade_cat = CategoricalDtype(categories=["A", "B", "C", "D"], ordered=True)
+gender_cat = CategoricalDtype(["male", "female"], ordered=False)
+grade_cat = CategoricalDtype(["A", "B", "C", "D"], ordered=True)
 types = {
   'gender': gender_cat,
   'dob': 'datetime64',
@@ -68,26 +100,44 @@ types = {
   'grade': grade_cat,
 }
 data = data.astype(types)
-data.dtypes
+print(data.dtypes)
 ```
+
+## Deduplication
+
+Deduplication is the process of removing identical rows from a table. Two rows are identical if the corresponding values in each column are equal. 
 
 ## Deduplication
 
 ```{python echo=TRUE}
 data.drop_duplicates(inplace=True)
-data
+print(data)
 ```
 
 ## Quality Check
 
-```{python}
-def check(row):
-  A_check = row['grade'] == "A" and 90 < row['score'] <= 100 
-  B_check = row['grade'] == "B" and 80 < row['score'] <= 90
-  C_check = row['grade'] == "C" and 70 < row['score'] <= 80
-  D_check = row['grade'] == "D" and  0 < row['score'] <= 70
-  return A_check or B_check or C_check or D_check or np.isnan(row['score'])
-  
+Quality checking is the process of testing if the columns and relationships between columns satisfy certain expectations. For example testing if all values in a column are non-negative or between two bounds. 
 
-any(data.apply(check, axis=1))
+Quality checking improves the reliability of project outputs (e.g. predictive model) and robustness to upstream changes in the data pipeline.
+
+## Quality Check
+
+```{python echo=TRUE}
+def test(row):
+  A = row['grade'] == "A" and 90 < row['score'] <= 100 
+  B = row['grade'] == "B" and 80 < row['score'] <= 90
+  C = row['grade'] == "C" and 70 < row['score'] <= 80
+  D = row['grade'] == "D" and  0 < row['score'] <= 70
+  return A or B or C or D or np.isnan(row['score'])
+
+print(data.apply(test, axis=1))
 ```
+
+## Advice
+
+You should think of data cleaning as transforming data **without loss of information**. Data contains important information that you should not lose at this stage. In fact, data cleaning should increase the information content of data (e.g. column names and types). With only some exceptions:
+
+1. **Data Cleaning**: lossless data transformations
+2. **Modelling**: lossy data transformations
+
+Lossy data transformations during the modelling stage (i.e. pre-processing) are evaluated with validation data on the task.
