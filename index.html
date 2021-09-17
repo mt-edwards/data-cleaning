@@ -177,7 +177,7 @@ slide:not(.current) .plotly.html-widget{
 
 <slide class=""><hgroup><h2>Motivation</h2></hgroup><article  id="motivation">
 
-<p>The most time consuming stages of a data science project are data cleaning and exporatory data analysis (EDA). It is often stated that approximately 80% of the time is consumed by these two stages. This percentage will increase as your skill level increases, since these stages are less effected by skill level. These two stages are particularly important for:</p>
+<p>The most time consuming stages of a data science project are data cleaning and exploratory data analysis (EDA). It is often stated that approximately 80% of the time is consumed by these two stages. This percentage will increase as your skill level increases, since these stages are less effected by skill level. These two stages are particularly important for:</p>
 
 <ul>
 <li>Reliability</li>
@@ -241,7 +241,7 @@ print(data.columns)</pre>
 
 <p>Missingness is often represented inconsistently. For example the integer <code>-1</code> and the string &ldquo;na&rdquo; are commonly used to represent missing numeric and categorical values, respectively.</p>
 
-<p>Missingness is also sometimes respresented with an empty string. This can introduce ambiguity when empty strings are used for other purposes. In <code>pandas</code> missing values should be represented with the <code>numpy</code> special value <code>nan</code> (there are some rare exceptions).</p>
+<p>Missingness is also sometimes represented with an empty string. This can introduce ambiguity when empty strings are used for other purposes. In <code>pandas</code> missing values should be represented with the <code>numpy</code> special value <code>nan</code> (there are some rare exceptions).</p>
 
 </article></slide><slide class=""><hgroup><h2>Missing Values</h2></hgroup><article  id="missing-values-1">
 
@@ -319,14 +319,14 @@ print(data)</pre>
 
 </article></slide><slide class=""><hgroup><h2>Quality Check</h2></hgroup><article  id="quality-check-1">
 
-<pre class = 'prettyprint lang-python'>def check(row):
+<pre class = 'prettyprint lang-python'>def test(row):
   A = row[&#39;grade&#39;] == &quot;A&quot; and 90 &lt; row[&#39;score&#39;] &lt;= 100 
   B = row[&#39;grade&#39;] == &quot;B&quot; and 80 &lt; row[&#39;score&#39;] &lt;= 90
   C = row[&#39;grade&#39;] == &quot;C&quot; and 70 &lt; row[&#39;score&#39;] &lt;= 80
   D = row[&#39;grade&#39;] == &quot;D&quot; and  0 &lt; row[&#39;score&#39;] &lt;= 70
   return A or B or C or D or np.isnan(row[&#39;score&#39;])
 
-print(data.apply(check, axis=1))</pre>
+print(data.apply(test, axis=1))</pre>
 
 <pre >## 0     True
 ## 1     True
