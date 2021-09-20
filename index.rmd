@@ -22,7 +22,7 @@ The main difference between good and bad data scientists (with equal skill level
 
 ## Introduction
 
-**Clean data** are data that can be used for exploratory data analysis (EDA). **Data cleaning** is the process of transforming raw data into clean data. The process of data cleaning involves five steps:
+**Clean data** are data that are human-readable, consistently formatted and quality checked. **Data cleaning** is the process of transforming raw data into clean data. The process of data cleaning involves five steps:
 
 1. Column names
 2. Missing values
@@ -46,7 +46,7 @@ The first stage of data cleaning is renaming the column names. This will simplif
 - `kebab-case`
 - `PascalCase`
 
-`snake_case` is recommended since it is more human readable.
+`snake_case` is recommended since it is more human-readable.
 
 ## Column Names
 
