@@ -334,6 +334,13 @@ print(data.apply(test, axis=1))</pre>
 ## 4    False
 ## dtype: bool</pre>
 
+</article></slide><slide class=""><hgroup><h2>Write Data</h2></hgroup><article  id="write-data">
+
+<p>After the five steps of data cleaning the data needs to be written to a file so that all the transformations are preserved. For example, the CSV file format does not preserve column types. A memory efficient and language independent (python and R compatible) tabular file format is <code>feather</code>.</p>
+
+<pre class = 'prettyprint lang-python'>import pyarrow.feather as feather
+feather.write_feather(data, &#39;data.feather&#39;)</pre>
+
 </article></slide><slide class=""><hgroup><h2>Advice</h2></hgroup><article  id="advice">
 
 <p>You should think of data cleaning as transforming data <strong>without loss of information</strong>. Data contains important information that you should not lose at this stage. In fact, data cleaning should increase the information content of data (e.g. column names and types). With only some exceptions:</p>
